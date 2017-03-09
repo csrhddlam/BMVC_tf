@@ -49,14 +49,17 @@ def get_data(sp_list, total_back_number, patch_size, channel, thres):
         # print('image', i)
         group = f[res_info[i][0]]
         dist = np.array(group['layer_feature_dist'])
+        feat = np.array(group['layer_feature_ori'])
         img = np.array(group['img'])
         # padded_img =np.lib.pad(img, ((0,), (100,), (100,)), 'constant', constant_values=(0,))
         [_, width, height] = dist.shape
-        if thres != 0:
-            binary = dist < thres
+        if thres < 0:
+            binary = (feat - 55) / 110
+        elif thres == 0:
+            binary = (dist - 1) / 2
         else:
-            binary = dist
-
+            binary = np.float32(dist < thres)
+        binary = np.float32(binary)
         binary_mask = np.zeros((1, width, height))
         padded = np.lib.pad(binary, ((0,), (patch_size//2,), (patch_size//2,)), 'constant', constant_values=(0,))
         semantic_parts = train_anno[i][train_instances[i]][1]

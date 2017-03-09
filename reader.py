@@ -65,19 +65,19 @@ def ptb_producer(raw_data, raw_label, batch_size, config, name=None):
             data_vb = tf.Variable(data_ph, trainable=False, collections=[], name='data_vb')
             label_vb = tf.Variable(label_ph, trainable=False, collections=[], name='label_vb')
 
-    #         epoch_size = batch_len
-    #         assertion = tf.assert_positive(
-    #             epoch_size,
-    #             message="epoch_size == 0, decrease batch_size or num_steps")
-    # with tf.control_dependencies([assertion]):
-    #     epoch_size = tf.identity(epoch_size, name="epoch_size")
+            #         epoch_size = batch_len
+            #         assertion = tf.assert_positive(
+            #             epoch_size,
+            #             message="epoch_size == 0, decrease batch_size or num_steps")
+            # with tf.control_dependencies([assertion]):
+            #     epoch_size = tf.identity(epoch_size, name="epoch_size")
 
-    # image, label = tf.train.slice_input_producer([data_vb, label_vb], name='producer')
-    # x, y = tf.train.batch([image, label], batch_size=batch_size, capacity=int(batch_size * (0.4 * epoch_size + 3)), name='batch')
+            # image, label = tf.train.slice_input_producer([data_vb, label_vb], name='producer')
+            # x, y = tf.train.batch([image, label], batch_size=batch_size, capacity=int(batch_size * (0.4 * epoch_size + 3)), name='batch')
 
-    i = tf.train.range_input_producer(epoch_size, shuffle=False).dequeue()
-    x = tf.strided_slice(data_vb, [i * batch_size, 0], [(i + 1) * batch_size, feature_len])
-    x.set_shape([batch_size, feature_len])
-    y = tf.strided_slice(label_vb, [i * batch_size, 0], [(i + 1) * batch_size, class_len])
-    y.set_shape([batch_size, class_len])
+            i = tf.train.range_input_producer(epoch_size, shuffle=False).dequeue()
+            x = tf.strided_slice(data_vb, [i * batch_size, 0], [(i + 1) * batch_size, feature_len])
+            x.set_shape([batch_size, feature_len])
+            y = tf.strided_slice(label_vb, [i * batch_size, 0], [(i + 1) * batch_size, class_len])
+            y.set_shape([batch_size, class_len])
     return x, y, data_vb.initializer, label_vb.initializer, data_ph, label_ph, data_vb, label_vb

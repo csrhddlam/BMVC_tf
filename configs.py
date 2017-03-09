@@ -1,4 +1,4 @@
-which_config = 0
+which_config = 1
 
 
 class Config0(object):
@@ -6,15 +6,15 @@ class Config0(object):
     learning_rate = 1.0
     max_grad_norm = 10
     num_layers = 1
-    num_steps = 1
+    num_steps = 15
     hidden_size = 40 # fix
-    max_epoch = 14
+    max_lr_epoch = 100
     max_max_epoch = 1000
     keep_prob = 1
     lr_decay = 1 / 1.02
     batch_size = 100
     output_size = 40
-    use_gpu = '/gpu:0'
+    # use_gpu = '/gpu:0'
 
 
 class Config1(object):
@@ -22,9 +22,9 @@ class Config1(object):
     learning_rate = 1.0
     max_grad_norm = 10
     num_layers = 1
-    num_steps = 10
+    num_steps = 1
     hidden_size = 40  # fix
-    max_epoch = 14
+    max_lr_epoch = 100
     max_max_epoch = 1000
     keep_prob = 1
     lr_decay = 1 / 1.02
@@ -38,15 +38,15 @@ class Config2(object):
     learning_rate = 1.0
     max_grad_norm = 10
     num_layers = 1
-    num_steps = 10
+    num_steps = 7
     hidden_size = 40  # fix
-    max_epoch = 14
+    max_lr_epoch = 100
     max_max_epoch = 1000
     keep_prob = 1
     lr_decay = 1 / 1.02
     batch_size = 100
     output_size = 40
-    use_gpu = '/gpu:2'
+    # use_gpu = '/gpu:2'
 
 
 class Default(object):
@@ -56,10 +56,10 @@ class Default(object):
     num_layers = 1
     num_steps = 10
     hidden_size = 40  # fix
-    max_epoch = 14
+    max_lr_epoch = 14
     max_max_epoch = 1000
     keep_prob = 1
     lr_decay = 1 / 1.01
     batch_size = 100
     output_size = 40
-    use_gpu = '/gpu:2'
+    # use_gpu = '/gpu:2'

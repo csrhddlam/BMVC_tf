@@ -68,22 +68,16 @@ class PTBModel(object):
                 (cell_output, state) = cell(inputs, state)
                 outputs.append(cell_output)
 
-        softmax_w = tf.get_variable(
-            "softmax_w", [size, output_size], dtype=data_type())
-        softmax_b = tf.get_variable("softmax_b", [output_size], dtype=data_type())
-        logits = tf.matmul(outputs[-1], softmax_w) + softmax_b
-        # logits = outputs[-1]
-        # targets = np.zeros((batch_size, output_size))
-        # targets[range(batch_size), input_.targets] = 1
+        # softmax_w = tf.get_variable(
+        #     "softmax_w", [size, output_size], dtype=data_type())
+        # softmax_b = tf.get_variable("softmax_b", [output_size], dtype=data_type())
+        # outputs.append(tf.matmul(outputs[-1], softmax_w) + softmax_b)
 
-        # embedding = tf.get_variable("embedding", [output_size, 1], dtype=data_type())
-        # targets = tf.nn.embedding_lookup(embedding, input_.targets)
-
-        loss = tf.nn.softmax_cross_entropy_with_logits(labels=input_.targets, logits=logits)
+        loss = tf.nn.softmax_cross_entropy_with_logits(labels=input_.targets, logits=outputs[-1])
 
         self._cost = cost = tf.reduce_sum(loss) / batch_size
         self._final_state = state
-        self.logits = logits
+        self.logits = outputs[-1]
         self.targets = input_.targets
 
         if not is_training:

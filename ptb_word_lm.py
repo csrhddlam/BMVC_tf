@@ -173,7 +173,7 @@ def main(_):
         raise ValueError("Must set --data_path to PTB data directory")
 
     back_samples = 0
-    [for_data, label, index_list, back_data] = get_data(range(39), back_samples, 7, 176, 0.65)
+    [for_data, label, index_list, back_data] = get_data(range(39), back_samples, 7, 512, -1)
     all_data = np.transpose(np.concatenate((for_data, back_data), axis=1))
     all_gt = np.concatenate((label, 40 * np.ones((1, back_samples), dtype=np.int32)), axis=1)[0] - 1
     # all_data = np.random.randn(7777, 1000)
@@ -242,14 +242,14 @@ def main(_):
             session.run(mtest.input.data_init, feed_dict={mtest.input.data_ph: test_data})
             session.run(mtest.input.label_init, feed_dict={mtest.input.label_ph: test_label})
 
-            # coord = tf.train.Coordinator()
-            # threads = tf.train.start_queue_runners(coord=coord)
+            coord = tf.train.Coordinator()
+            threads = tf.train.start_queue_runners(coord=coord)
 
             for i in range(config.max_max_epoch):
                 # temp1 = tf.Graph.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)
                 # temp2 = tf.Graph.get_collection(tf.GraphKeys.LOCAL_VARIABLES)
 
-                lr_decay = config.lr_decay ** max(i + 1 - config.max_epoch, 0.0)
+                lr_decay = config.lr_decay ** max(i + 1 - config.max_lr_epoch, 0.0)
                 m.assign_lr(session, config.learning_rate * lr_decay)
                 print("Epoch: %d Learning rate: %.7f" % (i + 1, session.run(m.lr)))
 
@@ -261,8 +261,8 @@ def main(_):
             test_loss, test_error, test_f1 = run_epoch(session, mtest)
             print("Test Loss: %.7f Test Error: %.7f Test F1: %.7f" % (test_loss, test_error, test_f1))
 
-            # coord.request_stop()
-            # coord.join(threads)
+            coord.request_stop()
+            coord.join(threads)
 
             # if FLAGS.save_path:
             #     print("Saving model to %s." % FLAGS.save_path)
